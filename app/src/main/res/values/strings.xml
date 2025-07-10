@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">Ordeist</string>
+
+    <string name="order_title">New Order</string>
+    <string name="category_title">Choose Category</string>
+    <string name="sign_up_title">Signing Up</string>
+
+    <!--Аккаунт-->
+    <string name="sign_in">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="logout">Logout</string>
+    <string name="create">Create</string>
+    <string name="password">Password</string>
+    <string name="repeat">Reenter</string>
+    <string name="change_password">Change Password</string>
+    <string name="first_name">First Name</string>
+    <string name="second_name">Second Name</string>
+    <string name="phone_number">Phone</string>
+
+    <!--Заказ-->
+    <string name="choose_category">Order\'s category</string>
+    <string name="client_name">Client Name</string>
+    <string name="client_phone_number">Client\'s Phone</string>
+    <string name="add_order">Add</string>
+    <string name="cancel_order">Cancel</string>
+
+    <string name="category_1">Category 1</string>
+    <string name="category_2">Category 2</string>
+    <string name="category_3">Category 3</string>
+    <string name="category_4">Category 4</string>
+    <string name="category_5">Category 5</string>
+
+    <string name="or">Or</string>
+    <string name="photos_for_documents">Category 1</string>
+    <string name="portraits">Category 2</string>
+    <string name="wedding_photos">Category 3</string>
+    <string name="editing">Category 4</string>
+    <string name="documents_printing">Category 5</string>
+    <string name="incorrect_login">Incorrect login or password</string>
+    <string name="new_order">New Order</string>
+    <string name="contacts">Contacts*</string>
+    <string name="client_email">Client\'s email</string>
+    <string name="email">email</string>
+    <string name="remove_order">Remove</string>
+    <string name="new_password">New Password</string>
+    <string name="password_changed">Password just changed.</string>
+    <string name="new_order_added">New order just added.</string>
+</resources>
