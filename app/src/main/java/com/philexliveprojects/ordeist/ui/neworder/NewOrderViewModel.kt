@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.philexliveprojects.ordeist.data.CategoryRepository
 import com.philexliveprojects.ordeist.data.Order
 import com.philexliveprojects.ordeist.data.OrderRepository
 import kotlinx.coroutines.Dispatchers
@@ -11,16 +12,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class NewOrderViewModel(
-    private val repository: OrderRepository
+    private val orderRepository: OrderRepository,
+    private val categoryRepository: CategoryRepository
 ) : ViewModel() {
     private val _newOrderState = MutableStateFlow(NewOrder())
     val newOrderState = _newOrderState.asStateFlow()
+
+    val categories = categoryRepository.getCategoriesList().stateIn(
+        scope = viewModelScope,
+        started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     fun onClientNameChange(value: String) = _newOrderState.update {
         newOrderState.value.copy(clientName = value)
@@ -53,7 +62,7 @@ class NewOrderViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addOrder() = viewModelScope.launch(Dispatchers.IO) {
-        repository.addOrder(
+        orderRepository.addOrder(
             newOrderState.map {
                 Order(
                     clientName = it.clientName,

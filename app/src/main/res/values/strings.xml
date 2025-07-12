@@ -5,7 +5,7 @@
     <string name="category_title">Choose Category</string>
     <string name="sign_up_title">Signing Up</string>
 
-    <!--Аккаунт-->
+    <!--Account-->
     <string name="sign_in">Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="logout">Logout</string>
@@ -17,7 +17,7 @@
     <string name="second_name">Second Name</string>
     <string name="phone_number">Phone</string>
 
-    <!--Заказ-->
+    <!--Order-->
     <string name="choose_category">Order\'s category</string>
     <string name="client_name">Client Name</string>
     <string name="client_phone_number">Client\'s Phone</string>
@@ -37,7 +37,7 @@
     <string name="editing">Category 4</string>
     <string name="documents_printing">Category 5</string>
     <string name="incorrect_login">Incorrect login or password</string>
-    <string name="new_order">New Order</string>
+    <string name="new_order">Order</string>
     <string name="contacts">Contacts*</string>
     <string name="client_email">Client\'s email</string>
     <string name="email">email</string>
@@ -45,4 +45,7 @@
     <string name="new_password">New Password</string>
     <string name="password_changed">Password just changed.</string>
     <string name="new_order_added">New order just added.</string>
+    <string name="new_category">Category</string>
+    <string name="add_category">Add category</string>
+    <string name="category_name">Category name</string>
 </resources>

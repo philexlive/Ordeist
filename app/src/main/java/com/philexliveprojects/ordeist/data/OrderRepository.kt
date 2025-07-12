@@ -2,22 +2,12 @@ package com.philexliveprojects.ordeist.data
 
 import kotlinx.coroutines.flow.Flow
 
-interface OrderRepository {
-    fun getOrdersList(): Flow<List<Order>>
+class OrderRepository(private val orderDao: OrderDao) {
+    fun getOrdersList(): Flow<List<Order>> = orderDao.getList()
 
-    fun getOrder(id: Int): Flow<Order>
+    fun getOrder(id: Int): Flow<Order> = orderDao.getById(id)
 
-    suspend fun addOrder(order: Order)
+    suspend fun addOrder(value: Order) = orderDao.add(value)
 
-    suspend fun deleteOrder(order: Order)
-}
-
-class OrderRepositoryImpl(private val orderDao: OrderDao) : OrderRepository {
-    override fun getOrdersList(): Flow<List<Order>> = orderDao.getOrdersList()
-
-    override fun getOrder(id: Int): Flow<Order> = orderDao.getOrder(id)
-
-    override suspend fun addOrder(order: Order) = orderDao.addOrder(order)
-
-    override suspend fun deleteOrder(order: Order) = orderDao.deleteOrder(order)
+    suspend fun deleteOrder(value: Order) = orderDao.delete(value)
 }

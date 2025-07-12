@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.philexliveprojects.ordeist.R
 import com.philexliveprojects.ordeist.SLIDING_SPEED
+import com.philexliveprojects.ordeist.data.Category
 import com.philexliveprojects.ordeist.ui.AppViewModelProvider
 import com.philexliveprojects.ordeist.ui.Categories
 import com.philexliveprojects.ordeist.ui.utils.CategoryBox
@@ -103,7 +105,11 @@ fun NewOrderScreen(
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(stringResource(R.string.client_name))
-                    }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    singleLine = true
                 )
 
                 Spacer(Modifier.height(dimensionResource(R.dimen.spacer)))
@@ -131,7 +137,11 @@ fun NewOrderScreen(
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(stringResource(R.string.client_email))
-                    }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Done
+                    )
                 )
 
                 Spacer(Modifier.weight(1f))
@@ -169,7 +179,9 @@ fun NewOrderScreen(
         enter = slideInHorizontally { SLIDING_SPEED } + fadeIn(),
         exit = slideOutHorizontally { SLIDING_SPEED } + fadeOut()
     ) {
+        val categories by viewModel.categories.collectAsState()
         CategorySelection(
+            categories = categories,
             onCategory = {
                 viewModel.setCategory(it)
                 isCategorySelectionOpened = false
@@ -185,6 +197,7 @@ fun NewOrderScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CategorySelection(
+    categories: List<Category>,
     onCategory: (String) -> Unit = { },
     onNavigateBack: () -> Unit = { }
 ) {
@@ -199,8 +212,8 @@ private fun CategorySelection(
                 }
             )
 
-            Categories.entries.forEach {
-                val label = stringResource(it.label)
+            categories.forEach {
+                val label = it.name
                 CategoryBox(
                     modifier = Modifier.fillMaxWidth(),
                     text = label,

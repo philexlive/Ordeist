@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface OrderDao {
     @Query("SELECT * FROM orders")
-    fun getOrdersList(): Flow<List<Order>>
+    fun getList(): Flow<List<Order>>
 
     @Query("SELECT * FROM orders WHERE id = :id")
-    fun getOrder(id: Int): Flow<Order>
+    fun getById(id: Int): Flow<Order>
 
     @Delete
-    suspend fun deleteOrder(order: Order)
+    suspend fun delete(value: Order)
 
     @Insert
-    suspend fun addOrder(order: Order)
+    suspend fun add(value: Order)
 }

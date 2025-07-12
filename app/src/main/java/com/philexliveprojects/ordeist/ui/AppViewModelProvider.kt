@@ -5,8 +5,9 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.philexliveprojects.ordeist.ProfPrintApplication
+import com.philexliveprojects.ordeist.OrdeistApplication
 import com.philexliveprojects.ordeist.ui.home.HomeViewModel
+import com.philexliveprojects.ordeist.ui.newcategory.NewCategoryViewModel
 import com.philexliveprojects.ordeist.ui.neworder.NewOrderViewModel
 import com.philexliveprojects.ordeist.ui.order.OrderViewModel
 import com.philexliveprojects.ordeist.ui.signin.SignInViewModel
@@ -31,7 +32,10 @@ object AppViewModelProvider {
         }
 
         initializer {
-            NewOrderViewModel(profPrintApplication().container.orderRepository)
+            NewOrderViewModel(
+                profPrintApplication().container.orderRepository,
+                profPrintApplication().container.categoryRepository
+            )
         }
 
         initializer {
@@ -46,8 +50,11 @@ object AppViewModelProvider {
                 createSavedStateHandle()
             )
         }
+        initializer {
+            NewCategoryViewModel(profPrintApplication().container.categoryRepository)
+        }
     }
-}
 
-fun CreationExtras.profPrintApplication(): ProfPrintApplication =
-    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as ProfPrintApplication)
+    fun CreationExtras.profPrintApplication(): OrdeistApplication =
+        (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as OrdeistApplication)
+}
