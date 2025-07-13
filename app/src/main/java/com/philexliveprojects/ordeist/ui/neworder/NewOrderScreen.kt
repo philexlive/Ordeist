@@ -30,7 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +48,6 @@ import com.philexliveprojects.ordeist.R
 import com.philexliveprojects.ordeist.SLIDING_SPEED
 import com.philexliveprojects.ordeist.data.Category
 import com.philexliveprojects.ordeist.ui.AppViewModelProvider
-import com.philexliveprojects.ordeist.ui.Categories
 import com.philexliveprojects.ordeist.ui.utils.CategoryBox
 import kotlinx.coroutines.launch
 
@@ -213,7 +211,7 @@ private fun CategorySelection(
             )
 
             categories.forEach {
-                val label = it.name
+                val label = it.label
                 CategoryBox(
                     modifier = Modifier.fillMaxWidth(),
                     text = label,

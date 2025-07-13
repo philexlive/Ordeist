@@ -18,13 +18,13 @@ object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             SignInViewModel(
-                profPrintApplication().container.accountRepository,
+                profPrintApplication().container.accountRepositoryImpl,
                 profPrintApplication().container.userPreferencesRepository
             )
         }
 
         initializer {
-            SignUpViewModel(profPrintApplication().container.accountRepository)
+            SignUpViewModel(profPrintApplication().container.accountRepositoryImpl)
         }
 
         initializer {
@@ -40,7 +40,7 @@ object AppViewModelProvider {
 
         initializer {
             UserProfileViewModel(
-                profPrintApplication().container.accountRepository,
+                profPrintApplication().container.accountRepositoryImpl,
                 profPrintApplication().container.userPreferencesRepository
             )
         }

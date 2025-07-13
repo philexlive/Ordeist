@@ -1,39 +1,49 @@
 package com.philexliveprojects.ordeist.ui.newcategory
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.philexliveprojects.ordeist.data.Category
 import com.philexliveprojects.ordeist.data.CategoryRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.stateIn
 
-class IncorrectCategoryException(message: String) : Exception(message)
+sealed interface NewCategoryResult {
+    object Success : NewCategoryResult
+    class Error(val message: String) : NewCategoryResult
+}
 
 class NewCategoryViewModel(val repository: CategoryRepository) : ViewModel() {
-    private var _categoryState = MutableStateFlow(Category(name = ""))
+    private var _categoryState = MutableStateFlow(Category(label = ""))
 
     val category = _categoryState.asStateFlow()
 
-    fun changeCategoryName(value: String) {
-        var tempValue = value
-
+    fun changeCategoryName(value: String): NewCategoryResult {
         if (value.length >= 50)
-            tempValue = value.substring(0, 50)
+            return NewCategoryResult.Error("Category name cannot be longer than 50 characters")
 
-        _categoryState.value = _categoryState.value.copy(name = tempValue)
+        _categoryState.value = _categoryState.value.copy(label = value)
+
+        return NewCategoryResult.Success
     }
 
-    fun addNewCategory() {
-        if (category.value.name.isEmpty())
-            throw IllegalArgumentException("Category name cannot be empty")
+    // TODO: Bug coroutines leak in tests
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun addNewCategory(): NewCategoryResult {
+        val label = category.value.label.trim()
 
-        val newCategory = category.value.copy()
-
-        viewModelScope.launch {
-
-            repository.addCategory(newCategory)
+        if (label.isEmpty()) {
+            Log.e("NewCategoryViewModel", "Label cannot be empty")
         }
+
+        val result = viewModelScope.async {
+            repository.addCategory(category.value.copy(category.value.label.trim()))
+        }
+
+        return result.getCompleted()
     }
 }
 

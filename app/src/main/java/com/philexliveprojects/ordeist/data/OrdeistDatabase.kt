@@ -12,7 +12,7 @@ import com.philexliveprojects.ordeist.ORDER_DATABASE
         Account::class,
         Category::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class OrdeistDatabase : RoomDatabase() {
@@ -27,7 +27,7 @@ abstract class OrdeistDatabase : RoomDatabase() {
         fun getDatabase(context: Context): OrdeistDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, OrdeistDatabase::class.java, ORDER_DATABASE)
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration(true)
                     .build()
                     .also { Instance = it }
             }

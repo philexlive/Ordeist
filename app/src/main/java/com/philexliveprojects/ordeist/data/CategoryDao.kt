@@ -15,8 +15,8 @@ interface CategoryDao {
     @Query("SELECT * FROM categories")
     fun getList(): Flow<List<Category>>
 
-    @Query("SELECT * FROM categories WHERE id = :id")
-    fun getById(id: Int): Flow<Category>
+    @Query("SELECT * FROM categories WHERE label = :label")
+    fun get(label: String): Flow<Category?>
 
     @Delete
     suspend fun delete(value: Category)

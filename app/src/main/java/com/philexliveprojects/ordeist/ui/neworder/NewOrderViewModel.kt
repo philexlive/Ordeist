@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter
 
 class NewOrderViewModel(
     private val orderRepository: OrderRepository,
-    private val categoryRepository: CategoryRepository
+    categoryRepository: CategoryRepository
 ) : ViewModel() {
     private val _newOrderState = MutableStateFlow(NewOrder())
     val newOrderState = _newOrderState.asStateFlow()
