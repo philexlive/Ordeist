@@ -105,7 +105,7 @@ fun NewOrderScreen(
                         Text(stringResource(R.string.client_name))
                     },
                     keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next
+                        imeAction = ImeAction.Done
                     ),
                     singleLine = true
                 )
@@ -137,7 +137,7 @@ fun NewOrderScreen(
                         Text(stringResource(R.string.client_email))
                     },
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Phone,
+                        keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Done
                     )
                 )

@@ -1,8 +1,6 @@
 package com.philexliveprojects.ordeist.data
 
-import com.philexliveprojects.ordeist.ui.newcategory.NewCategoryResult
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 
 
 interface CategoryRepository {
@@ -10,7 +8,9 @@ interface CategoryRepository {
 
     fun getCategory(value: String): Flow<Category?>
 
-    suspend fun addCategory(value: Category): NewCategoryResult
+    suspend fun categoryExists(value: String): Boolean
+
+    suspend fun addCategory(value: Category)
 
     suspend fun deleteCategory(value: Category)
 }
@@ -21,15 +21,9 @@ class CategoryRepositoryImpl(private val dao: CategoryDao) : CategoryRepository 
 
     override fun getCategory(value: String): Flow<Category?> = dao.get(value)
 
-    override suspend fun addCategory(value: Category): NewCategoryResult {
-        if (dao.get(value.label).first() != null) {
-            return NewCategoryResult.Error("Category with label ${value.label} already exists")
-        }
+    override suspend fun categoryExists(value: String): Boolean = dao.exists(value)
 
-        dao.add(value)
-
-        return NewCategoryResult.Success
-    }
+    override suspend fun addCategory(value: Category) = dao.add(value)
 
     override suspend fun deleteCategory(value: Category) = dao.delete(value)
 }

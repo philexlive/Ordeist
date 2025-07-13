@@ -21,12 +21,6 @@ class UserPreferencesRepository(private val context: Context) {
         }
     }
 
-    suspend fun removeAccountId() {
-        context.dataStore.edit { preferences ->
-            preferences.remove(ACCOUNT_ID)
-        }
-    }
-
     companion object {
         private val ACCOUNT_ID = intPreferencesKey("account_id")
     }

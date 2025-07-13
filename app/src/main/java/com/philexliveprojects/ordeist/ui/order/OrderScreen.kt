@@ -20,7 +20,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.philexliveprojects.ordeist.R
 import com.philexliveprojects.ordeist.ui.AppViewModelProvider
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -59,22 +57,25 @@ fun OrderScreen(
                 }
             }
         )
-        val scope = rememberCoroutineScope()
-        InfoBox(order.category)
+        if(order != null) {
+            InfoBox(order!!.category)
 
-        InfoBox(order.clientName)
+            InfoBox(order!!.clientName)
 
-        InfoBox(order.phoneNumber.orEmpty())
+            if(!order!!.phoneNumber.isNullOrEmpty()) {
+                InfoBox(order!!.phoneNumber!!)
+            }
 
-        InfoBox(order.email.orEmpty())
+            if(!order!!.phoneNumber.isNullOrEmpty()) {
+                InfoBox(order!!.email!!)
+            }
+        }
 
         Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
             Button(
                 onClick = {
-                    scope.launch {
-                        viewModel.removeOrder()
-                        onNavigateBack()
-                    }
+                    onNavigateBack()
+                    viewModel.removeOrder()
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors().copy(

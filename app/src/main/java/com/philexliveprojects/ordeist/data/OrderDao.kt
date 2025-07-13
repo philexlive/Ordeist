@@ -12,7 +12,7 @@ interface OrderDao {
     fun getList(): Flow<List<Order>>
 
     @Query("SELECT * FROM orders WHERE id = :id")
-    fun getById(id: Int): Flow<Order>
+    fun getById(id: Int): Flow<Order?>
 
     @Delete
     suspend fun delete(value: Order)

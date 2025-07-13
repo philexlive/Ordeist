@@ -1,10 +1,13 @@
 package com.philexliveprojects.ordeist.ui.newcategory
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -29,6 +32,7 @@ import com.philexliveprojects.ordeist.R
 import com.philexliveprojects.ordeist.data.Category
 import com.philexliveprojects.ordeist.data.CategoryRepository
 import com.philexliveprojects.ordeist.ui.AppViewModelProvider
+import com.philexliveprojects.ordeist.ui.utils.CategoryBox
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -39,10 +43,12 @@ fun NewCategoryScreen(
     viewModel: NewCategoryViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val categoryUiState by viewModel.category.collectAsState()
+    val categoriesList by viewModel.categoriesList.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
     NewCategoryContent(
         categoryUiState,
+        categoriesList,
         viewModel::changeCategoryName,
         viewModel::addNewCategory,
         snackbarHostState
@@ -52,52 +58,64 @@ fun NewCategoryScreen(
 @Composable
 fun NewCategoryContent(
     categoryUiState: Category,
+    categoriesList: List<Category>,
     changeCategoryLabel: (String) -> NewCategoryResult,
     addNewCategory: () -> NewCategoryResult,
     snackbarHostState: SnackbarHostState
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_medium))
-    ) {
-        val scope = rememberCoroutineScope()
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.padding_medium))
+        ) {
+            val scope = rememberCoroutineScope()
 
-        TextField(
-            value = categoryUiState.label,
-            onValueChange = { newLabel ->
-                val result = changeCategoryLabel(newLabel)
+            TextField(
+                value = categoryUiState.label,
+                onValueChange = { newLabel ->
+                    val result = changeCategoryLabel(newLabel)
 
-                if (result is NewCategoryResult.Error) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(result.message)
+                    if (result is NewCategoryResult.Error) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(result.message)
+                        }
                     }
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(stringResource(R.string.category_name)) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    showSnackbar(
-                        addNewCategory(),
-                        scope,
-                        snackbarHostState
+                },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(R.string.category_name)) },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        showSnackbar(
+                            addNewCategory(),
+                            scope,
+                            snackbarHostState
+                        )
+                    }
+                ),
+                singleLine = true
+            )
+
+            // List of all values or similar to EditText's
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
+            ) {
+                items(categoriesList.size) {
+                    CategoryBox(
+                        text = categoriesList[it].label,
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
-            ),
-            singleLine = true
-        )
+            }
 
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-        ) {
-            SnackbarHost(snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
             Button(
                 onClick = {
                     showSnackbar(
@@ -113,8 +131,17 @@ fun NewCategoryContent(
                 Text(stringResource(R.string.add_category))
             }
         }
+
+        SnackbarHost(
+            snackbarHostState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .imePadding()
+                .align(Alignment.BottomCenter)
+        )
     }
 }
+
 
 private fun showSnackbar(
     result: NewCategoryResult,
@@ -155,9 +182,12 @@ fun NewCategoryContentPreview() {
                     return flowOf(database.firstOrNull { it.label == value })
                 }
 
-                override suspend fun addCategory(value: Category): NewCategoryResult {
+                override suspend fun categoryExists(value: String): Boolean {
+                    return true
+                }
+
+                override suspend fun addCategory(value: Category) {
                     database.add(value)
-                    return NewCategoryResult.Success
                 }
 
                 override suspend fun deleteCategory(value: Category) {
@@ -175,6 +205,7 @@ fun NewCategoryContentPreview() {
 
     NewCategoryContent(
         uiState,
+        emptyList(),
         viewModel::changeCategoryName,
         viewModel::addNewCategory,
         snackbarHostState
